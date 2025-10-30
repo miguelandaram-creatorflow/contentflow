@@ -1,20 +1,45 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Formulario de Calificación</title>
+
+  <!-- Estilos -->
   <script src="https://cdn.tailwindcss.com"></script>
+
+  <!-- React 18 + Babel (para JSX en el navegador) -->
   <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
   <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
   <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
-  <script src="https://unpkg.com/lucide@latest"></script>
 </head>
-<body>
+<body class="bg-white">
   <div id="root"></div>
+
   <script type="text/babel">
-    const { ArrowRight, CheckCircle2, Clock, XCircle } = lucide;
-    
+    // --------- Iconos SVG (React Components) ----------
+    const ArrowRight = (props) => (
+      <svg viewBox="0 0 24 24" width="1em" height="1em" {...props} fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+        <path d="M5 12h14"></path><path d="M12 5l7 7-7 7"></path>
+      </svg>
+    );
+    const CheckCircle2 = (props) => (
+      <svg viewBox="0 0 24 24" width="1em" height="1em" {...props} fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+        <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><path d="M22 4 12 14.01l-3-3"></path>
+      </svg>
+    );
+    const Clock = (props) => (
+      <svg viewBox="0 0 24 24" width="1em" height="1em" {...props} fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+        <circle cx="12" cy="12" r="10"></circle><path d="M12 6v6l4 2"></path>
+      </svg>
+    );
+    const XCircle = (props) => (
+      <svg viewBox="0 0 24 24" width="1em" height="1em" {...props} fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+        <circle cx="12" cy="12" r="10"></circle><path d="M15 9l-6 6"></path><path d="M9 9l6 6"></path>
+      </svg>
+    );
+    // ---------------------------------------------------
+
     function LeadQualificationForm() {
       const [formData, setFormData] = React.useState({
         firstName: '',
@@ -28,7 +53,6 @@
         challenge: '',
         budget: ''
       });
-
       const [result, setResult] = React.useState(null);
 
       const handleInputChange = (field, value) => {
@@ -38,29 +62,20 @@
       const calculateQualification = () => {
         let score = 0;
 
-        if (formData.businessStatus === 'constant') {
-          score += 3;
-        } else if (formData.businessStatus === 'unstable') {
-          score += 2;
-        } else {
-          score += 1;
-        }
+        // negocio
+        if (formData.businessStatus === 'constant') score += 3;
+        else if (formData.businessStatus === 'unstable') score += 2;
+        else score += 1;
 
-        if (formData.investment === 'premium') {
-          score += 3;
-        } else if (formData.investment === 'courses') {
-          score += 2;
-        } else {
-          score += 1;
-        }
+        // inversión previa
+        if (formData.investment === 'premium') score += 3;
+        else if (formData.investment === 'courses') score += 2;
+        else score += 1;
 
-        if (formData.budget === 'over4k' || formData.budget === '2k-4k') {
-          score += 3;
-        } else if (formData.budget === 'under1k') {
-          score += 2;
-        } else {
-          score += 1;
-        }
+        // presupuesto
+        if (formData.budget === 'over4k' || formData.budget === '2k-4k') score += 3;
+        else if (formData.budget === 'under1k') score += 2;
+        else score += 1;
 
         if (score >= 8) {
           return {
@@ -86,10 +101,10 @@
           return {
             category: 'not-qualified',
             duration: 0,
-            title: '¡Perfecto! Estás a punto de reservar tu llamada de 15 minutos.',
-            message: 'Haz clic en el botón de abajo para elegir el horario que más te convenga.',
+            title: '¡Gracias! Por ahora, revisemos recursos gratuitos para prepararte mejor.',
+            message: 'Pronto te enviaré material para avanzar y luego agendamos.',
             icon: 'error',
-            buttonText: 'Agendar llamada de 15 min',
+            buttonText: 'Agendar llamada (no disponible)',
             redirect: null
           };
         }
@@ -120,26 +135,20 @@
         return (
           <div className="min-h-screen bg-white flex items-center justify-center p-4">
             <div className="max-w-2xl w-full bg-white rounded-2xl shadow-2xl border-2 border-gray-200 p-8 md:p-12 text-center animate-fadeIn">
-              <div className={`w-20 h-20 rounded-full mx-auto mb-6 flex items-center justify-center ${
-                result.icon === 'success' ? 'bg-blue-900' : 
-                result.icon === 'warning' ? 'bg-blue-900' : 
-                'bg-gray-800'
-              }`}>
+              <div className={
+                "w-20 h-20 rounded-full mx-auto mb-6 flex items-center justify-center " +
+                (result.icon === 'success' ? 'bg-blue-900' : result.icon === 'warning' ? 'bg-blue-900' : 'bg-gray-800')
+              }>
                 {result.icon === 'success' && <CheckCircle2 className="w-12 h-12 text-white" />}
                 {result.icon === 'warning' && <Clock className="w-12 h-12 text-white" />}
                 {result.icon === 'error' && <XCircle className="w-12 h-12 text-white" />}
               </div>
-              
-              <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
-                🚀 {result.title}
-              </h2>
-              
-              <p className="text-lg text-gray-700 mb-8">
-                {result.message}
-              </p>
+
+              <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">🚀 {result.title}</h2>
+              <p className="text-lg text-gray-700 mb-8">{result.message}</p>
 
               {result.redirect ? (
-                
+                <a
                   href={result.redirect}
                   target="_blank"
                   rel="noopener noreferrer"
@@ -170,9 +179,7 @@
                 <div className="space-y-6 pb-8 border-b-2 border-gray-200">
                   <div className="grid md:grid-cols-2 gap-4">
                     <div>
-                      <label className="block text-sm font-semibold text-gray-700 mb-2">
-                        Nombre *
-                      </label>
+                      <label className="block text-sm font-semibold text-gray-700 mb-2">Nombre *</label>
                       <input
                         type="text"
                         value={formData.firstName}
@@ -181,9 +188,7 @@
                       />
                     </div>
                     <div>
-                      <label className="block text-sm font-semibold text-gray-700 mb-2">
-                        Apellido *
-                      </label>
+                      <label className="block text-sm font-semibold text-gray-700 mb-2">Apellido *</label>
                       <input
                         type="text"
                         value={formData.lastName}
@@ -192,10 +197,9 @@
                       />
                     </div>
                   </div>
+
                   <div>
-                    <label className="block text-sm font-semibold text-gray-700 mb-2">
-                      Teléfono *
-                    </label>
+                    <label className="block text-sm font-semibold text-gray-700 mb-2">Teléfono *</label>
                     <input
                       type="tel"
                       value={formData.phone}
@@ -203,10 +207,9 @@
                       className="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-900 focus:border-blue-900 outline-none transition"
                     />
                   </div>
+
                   <div>
-                    <label className="block text-sm font-semibold text-gray-700 mb-2">
-                      Correo electrónico *
-                    </label>
+                    <label className="block text-sm font-semibold text-gray-700 mb-2">Correo electrónico *</label>
                     <input
                       type="email"
                       value={formData.email}
@@ -214,10 +217,9 @@
                       className="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-900 focus:border-blue-900 outline-none transition"
                     />
                   </div>
+
                   <div>
-                    <label className="block text-sm font-semibold text-gray-700 mb-2">
-                      Instagram *
-                    </label>
+                    <label className="block text-sm font-semibold text-gray-700 mb-2">Instagram *</label>
                     <input
                       type="text"
                       value={formData.instagram}
@@ -229,9 +231,7 @@
                 </div>
 
                 <div className="space-y-4 pb-8 border-b-2 border-gray-200">
-                  <h2 className="text-xl font-bold text-gray-900">
-                    ¿A qué te dedicas actualmente? *
-                  </h2>
+                  <h2 className="text-xl font-bold text-gray-900">¿A qué te dedicas actualmente? *</h2>
                   <div className="space-y-3">
                     {[
                       { value: 'coach', label: 'Soy Coach, Mentor o Consultor' },
@@ -241,9 +241,7 @@
                       <label
                         key={option.value}
                         className={`flex items-center p-4 border-2 rounded-lg cursor-pointer transition-all ${
-                          formData.occupation === option.value
-                            ? 'border-blue-900 bg-blue-50'
-                            : 'border-gray-300 hover:border-blue-900'
+                          formData.occupation === option.value ? 'border-blue-900 bg-blue-50' : 'border-gray-300 hover:border-blue-900'
                         }`}
                       >
                         <input
@@ -261,9 +259,7 @@
                 </div>
 
                 <div className="space-y-4 pb-8 border-b-2 border-gray-200">
-                  <h2 className="text-xl font-bold text-gray-900">
-                    ¿Actualmente tienes un negocio digital activo? *
-                  </h2>
+                  <h2 className="text-xl font-bold text-gray-900">¿Actualmente tienes un negocio digital activo? *</h2>
                   <div className="space-y-3">
                     {[
                       { value: 'constant', label: 'Sí, vendo servicios o programas de forma constante' },
@@ -274,9 +270,7 @@
                       <label
                         key={option.value}
                         className={`flex items-center p-4 border-2 rounded-lg cursor-pointer transition-all ${
-                          formData.businessStatus === option.value
-                            ? 'border-blue-900 bg-blue-50'
-                            : 'border-gray-300 hover:border-blue-900'
+                          formData.businessStatus === option.value ? 'border-blue-900 bg-blue-50' : 'border-gray-300 hover:border-blue-900'
                         }`}
                       >
                         <input
@@ -294,9 +288,7 @@
                 </div>
 
                 <div className="space-y-4 pb-8 border-b-2 border-gray-200">
-                  <h2 className="text-xl font-bold text-gray-900">
-                    ¿Has invertido antes en programas o mentorías para escalar tu negocio? *
-                  </h2>
+                  <h2 className="text-xl font-bold text-gray-900">¿Has invertido antes en programas o mentorías para escalar tu negocio? *</h2>
                   <div className="space-y-3">
                     {[
                       { value: 'premium', label: 'Sí, en programas o mentorías premium (acompañamiento 1 a 1)' },
@@ -306,9 +298,7 @@
                       <label
                         key={option.value}
                         className={`flex items-center p-4 border-2 rounded-lg cursor-pointer transition-all ${
-                          formData.investment === option.value
-                            ? 'border-blue-900 bg-blue-50'
-                            : 'border-gray-300 hover:border-blue-900'
+                          formData.investment === option.value ? 'border-blue-900 bg-blue-50' : 'border-gray-300 hover:border-blue-900'
                         }`}
                       >
                         <input
@@ -326,9 +316,7 @@
                 </div>
 
                 <div className="space-y-4 pb-8 border-b-2 border-gray-200">
-                  <h2 className="text-xl font-bold text-gray-900">
-                    ¿Qué sientes que más te está frenando hoy para crecer? *
-                  </h2>
+                  <h2 className="text-xl font-bold text-gray-900">¿Qué sientes que más te está frenando hoy para crecer? *</h2>
                   <textarea
                     value={formData.challenge}
                     onChange={(e) => handleInputChange('challenge', e.target.value)}
@@ -340,11 +328,9 @@
 
                 <div className="space-y-4 pb-8">
                   <p className="text-sm text-gray-700 leading-relaxed">
-                    Durante la sesión vamos a definir si tendría sentido trabajar 1 a 1 juntos y qué tipo de acompañamiento sería el más adecuado para ti. Sabemos que cada negocio está en una etapa distinta, por eso esta pregunta nos ayuda a ofrecerte opciones realistas según tu momento actual.
+                    Durante la sesión vamos a definir si tendría sentido trabajar 1 a 1 juntos y qué tipo de acompañamiento sería el más adecuado para ti.
                   </p>
-                  <p className="text-base font-semibold text-gray-900">
-                    ¿Cuál de las siguientes opciones describe mejor tu situación? *
-                  </p>
+                  <p className="text-base font-semibold text-gray-900">¿Cuál de las siguientes opciones describe mejor tu situación? *</p>
                   <div className="space-y-3">
                     {[
                       { value: 'no-budget', label: 'En este momento no cuento con presupuesto para invertir en mi crecimiento' },
@@ -355,9 +341,7 @@
                       <label
                         key={option.value}
                         className={`flex items-center p-4 border-2 rounded-lg cursor-pointer transition-all ${
-                          formData.budget === option.value
-                            ? 'border-blue-900 bg-blue-50'
-                            : 'border-gray-300 hover:border-blue-900'
+                          formData.budget === option.value ? 'border-blue-900 bg-blue-50' : 'border-gray-300 hover:border-blue-900'
                         }`}
                       >
                         <input
@@ -381,7 +365,7 @@
                     className={`px-12 py-3 rounded-full font-bold text-base flex items-center justify-center gap-2 transition-all ${
                       isFormValid()
                         ? 'bg-blue-900 text-white hover:bg-blue-800 shadow-lg hover:scale-105'
-                        : 'bg-gray-800 text-white shadow-md'
+                        : 'bg-gray-300 text-white cursor-not-allowed'
                     }`}
                   >
                     Siguiente 🚀
@@ -393,24 +377,13 @@
           </div>
 
           <style>{`
-            @keyframes fadeIn {
-              from {
-                opacity: 0;
-                transform: translateY(20px);
-              }
-              to {
-                opacity: 1;
-                transform: translateY(0);
-              }
-            }
-            .animate-fadeIn {
-              animation: fadeIn 0.5s ease-out;
-            }
+            @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+            .animate-fadeIn { animation: fadeIn 0.5s ease-out; }
           `}</style>
         </div>
       );
     }
-    
+
     const root = ReactDOM.createRoot(document.getElementById('root'));
     root.render(<LeadQualificationForm />);
   </script>
