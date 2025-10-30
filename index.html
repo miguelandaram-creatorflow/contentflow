@@ -98,17 +98,18 @@
             buttonText: 'Agendar llamada de 15 min',
             redirect: 'https://calendly.com/miguelandaram/sesion-personalizada-contentflow'
           };
-        } else {
-          return {
-            category: 'not-qualified',
-            duration: 0,
-            title: '¡Gracias! Por ahora, revisemos recursos gratuitos para prepararte mejor.',
-            message: 'Pronto te enviaré material para avanzar y luego agendamos.',
-            icon: 'error',
-            buttonText: 'Agendar llamada (no disponible)',
-            redirect: null
-          };
-        }
+     } else {
+  return {
+    category: 'not-qualified',
+    duration: 15,
+    title: '¡Perfecto! Estás a punto de reservar tu llamada de 15 minutos.',
+    message: 'Haz clic en el botón de abajo para elegir el horario que más te convenga.',
+    icon: 'warning',
+    buttonText: 'Agendar llamada de 15 min',
+    redirect: 'https://calendly.com/miguelangelorcial/sesion-personalizada-contentflow'
+  };
+}
+
       };
 
       const handleSubmit = () => {
