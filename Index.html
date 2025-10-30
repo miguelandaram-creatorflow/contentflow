@@ -1,0 +1,418 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Formulario de Calificación</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+  <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+  <script src="https://unpkg.com/lucide@latest"></script>
+</head>
+<body>
+  <div id="root"></div>
+  <script type="text/babel">
+    const { ArrowRight, CheckCircle2, Clock, XCircle } = lucide;
+    
+    function LeadQualificationForm() {
+      const [formData, setFormData] = React.useState({
+        firstName: '',
+        lastName: '',
+        phone: '',
+        email: '',
+        instagram: '',
+        occupation: '',
+        businessStatus: '',
+        investment: '',
+        challenge: '',
+        budget: ''
+      });
+
+      const [result, setResult] = React.useState(null);
+
+      const handleInputChange = (field, value) => {
+        setFormData(prev => ({ ...prev, [field]: value }));
+      };
+
+      const calculateQualification = () => {
+        let score = 0;
+
+        if (formData.businessStatus === 'constant') {
+          score += 3;
+        } else if (formData.businessStatus === 'unstable') {
+          score += 2;
+        } else {
+          score += 1;
+        }
+
+        if (formData.investment === 'premium') {
+          score += 3;
+        } else if (formData.investment === 'courses') {
+          score += 2;
+        } else {
+          score += 1;
+        }
+
+        if (formData.budget === 'over4k' || formData.budget === '2k-4k') {
+          score += 3;
+        } else if (formData.budget === 'under1k') {
+          score += 2;
+        } else {
+          score += 1;
+        }
+
+        if (score >= 8) {
+          return {
+            category: 'qualified',
+            duration: 45,
+            title: '¡Genial! Estás a punto de reservar tu llamada de 45 minutos.',
+            message: 'Selecciona el horario que mejor se ajuste a tu agenda.',
+            icon: 'success',
+            buttonText: 'Agendar llamada de 45 min',
+            redirect: 'https://calendly.com/miguelandaram/sesion-personalizada-contentflow'
+          };
+        } else if (score >= 5) {
+          return {
+            category: 'partial',
+            duration: 15,
+            title: '¡Perfecto! Estás a punto de reservar tu llamada de 15 minutos.',
+            message: 'Haz clic en el botón de abajo para elegir el horario que más te convenga.',
+            icon: 'warning',
+            buttonText: 'Agendar llamada de 15 min',
+            redirect: 'https://calendly.com/miguelandaram/sesion-personalizada-contentflow'
+          };
+        } else {
+          return {
+            category: 'not-qualified',
+            duration: 0,
+            title: '¡Perfecto! Estás a punto de reservar tu llamada de 15 minutos.',
+            message: 'Haz clic en el botón de abajo para elegir el horario que más te convenga.',
+            icon: 'error',
+            buttonText: 'Agendar llamada de 15 min',
+            redirect: null
+          };
+        }
+      };
+
+      const handleSubmit = () => {
+        const qualification = calculateQualification();
+        setResult(qualification);
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      };
+
+      const isFormValid = () => {
+        return (
+          formData.firstName &&
+          formData.lastName &&
+          formData.phone &&
+          formData.email &&
+          formData.instagram &&
+          formData.occupation &&
+          formData.businessStatus &&
+          formData.investment &&
+          formData.challenge &&
+          formData.budget
+        );
+      };
+
+      if (result) {
+        return (
+          <div className="min-h-screen bg-white flex items-center justify-center p-4">
+            <div className="max-w-2xl w-full bg-white rounded-2xl shadow-2xl border-2 border-gray-200 p-8 md:p-12 text-center animate-fadeIn">
+              <div className={`w-20 h-20 rounded-full mx-auto mb-6 flex items-center justify-center ${
+                result.icon === 'success' ? 'bg-blue-900' : 
+                result.icon === 'warning' ? 'bg-blue-900' : 
+                'bg-gray-800'
+              }`}>
+                {result.icon === 'success' && <CheckCircle2 className="w-12 h-12 text-white" />}
+                {result.icon === 'warning' && <Clock className="w-12 h-12 text-white" />}
+                {result.icon === 'error' && <XCircle className="w-12 h-12 text-white" />}
+              </div>
+              
+              <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
+                🚀 {result.title}
+              </h2>
+              
+              <p className="text-lg text-gray-700 mb-8">
+                {result.message}
+              </p>
+
+              {result.redirect ? (
+                
+                  href={result.redirect}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-2 bg-blue-900 text-white px-8 py-4 rounded-full font-semibold text-lg hover:bg-blue-800 transition-all hover:scale-105 shadow-lg"
+                >
+                  {result.buttonText}
+                  <ArrowRight className="w-5 h-5" />
+                </a>
+              ) : (
+                <button
+                  disabled
+                  className="inline-flex items-center gap-2 bg-gray-400 text-white px-8 py-4 rounded-full font-semibold text-lg cursor-not-allowed shadow-lg"
+                >
+                  {result.buttonText}
+                  <ArrowRight className="w-5 h-5" />
+                </button>
+              )}
+            </div>
+          </div>
+        );
+      }
+
+      return (
+        <div className="min-h-screen bg-white py-12 px-4">
+          <div className="max-w-3xl mx-auto">
+            <div className="bg-white rounded-2xl shadow-2xl border-2 border-gray-200 p-8 md:p-12">
+              <div className="space-y-8">
+                <div className="space-y-6 pb-8 border-b-2 border-gray-200">
+                  <div className="grid md:grid-cols-2 gap-4">
+                    <div>
+                      <label className="block text-sm font-semibold text-gray-700 mb-2">
+                        Nombre *
+                      </label>
+                      <input
+                        type="text"
+                        value={formData.firstName}
+                        onChange={(e) => handleInputChange('firstName', e.target.value)}
+                        className="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-900 focus:border-blue-900 outline-none transition"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-sm font-semibold text-gray-700 mb-2">
+                        Apellido *
+                      </label>
+                      <input
+                        type="text"
+                        value={formData.lastName}
+                        onChange={(e) => handleInputChange('lastName', e.target.value)}
+                        className="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-900 focus:border-blue-900 outline-none transition"
+                      />
+                    </div>
+                  </div>
+                  <div>
+                    <label className="block text-sm font-semibold text-gray-700 mb-2">
+                      Teléfono *
+                    </label>
+                    <input
+                      type="tel"
+                      value={formData.phone}
+                      onChange={(e) => handleInputChange('phone', e.target.value)}
+                      className="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-900 focus:border-blue-900 outline-none transition"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-sm font-semibold text-gray-700 mb-2">
+                      Correo electrónico *
+                    </label>
+                    <input
+                      type="email"
+                      value={formData.email}
+                      onChange={(e) => handleInputChange('email', e.target.value)}
+                      className="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-900 focus:border-blue-900 outline-none transition"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-sm font-semibold text-gray-700 mb-2">
+                      Instagram *
+                    </label>
+                    <input
+                      type="text"
+                      value={formData.instagram}
+                      onChange={(e) => handleInputChange('instagram', e.target.value)}
+                      placeholder="@tuusuario"
+                      className="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-900 focus:border-blue-900 outline-none transition"
+                    />
+                  </div>
+                </div>
+
+                <div className="space-y-4 pb-8 border-b-2 border-gray-200">
+                  <h2 className="text-xl font-bold text-gray-900">
+                    ¿A qué te dedicas actualmente? *
+                  </h2>
+                  <div className="space-y-3">
+                    {[
+                      { value: 'coach', label: 'Soy Coach, Mentor o Consultor' },
+                      { value: 'professional', label: 'Soy Profesional Independiente' },
+                      { value: 'business', label: 'Soy dueño de un Negocio digital' }
+                    ].map((option) => (
+                      <label
+                        key={option.value}
+                        className={`flex items-center p-4 border-2 rounded-lg cursor-pointer transition-all ${
+                          formData.occupation === option.value
+                            ? 'border-blue-900 bg-blue-50'
+                            : 'border-gray-300 hover:border-blue-900'
+                        }`}
+                      >
+                        <input
+                          type="radio"
+                          name="occupation"
+                          value={option.value}
+                          checked={formData.occupation === option.value}
+                          onChange={(e) => handleInputChange('occupation', e.target.value)}
+                          className="w-5 h-5 text-blue-900"
+                        />
+                        <span className="ml-3 text-gray-900 font-medium">{option.label}</span>
+                      </label>
+                    ))}
+                  </div>
+                </div>
+
+                <div className="space-y-4 pb-8 border-b-2 border-gray-200">
+                  <h2 className="text-xl font-bold text-gray-900">
+                    ¿Actualmente tienes un negocio digital activo? *
+                  </h2>
+                  <div className="space-y-3">
+                    {[
+                      { value: 'constant', label: 'Sí, vendo servicios o programas de forma constante' },
+                      { value: 'unstable', label: 'Sí, pero mis ventas son inestables' },
+                      { value: 'launching', label: 'Estoy recién lanzando mi marca' },
+                      { value: 'not-yet', label: 'Aún no vendo, pero quiero comenzar' }
+                    ].map((option) => (
+                      <label
+                        key={option.value}
+                        className={`flex items-center p-4 border-2 rounded-lg cursor-pointer transition-all ${
+                          formData.businessStatus === option.value
+                            ? 'border-blue-900 bg-blue-50'
+                            : 'border-gray-300 hover:border-blue-900'
+                        }`}
+                      >
+                        <input
+                          type="radio"
+                          name="businessStatus"
+                          value={option.value}
+                          checked={formData.businessStatus === option.value}
+                          onChange={(e) => handleInputChange('businessStatus', e.target.value)}
+                          className="w-5 h-5 text-blue-900"
+                        />
+                        <span className="ml-3 text-gray-900 font-medium">{option.label}</span>
+                      </label>
+                    ))}
+                  </div>
+                </div>
+
+                <div className="space-y-4 pb-8 border-b-2 border-gray-200">
+                  <h2 className="text-xl font-bold text-gray-900">
+                    ¿Has invertido antes en programas o mentorías para escalar tu negocio? *
+                  </h2>
+                  <div className="space-y-3">
+                    {[
+                      { value: 'premium', label: 'Sí, en programas o mentorías premium (acompañamiento 1 a 1)' },
+                      { value: 'courses', label: 'Sí, en cursos o servicios sueltos (edición, ads, setter, etc.)' },
+                      { value: 'never', label: 'No, nunca he invertido' }
+                    ].map((option) => (
+                      <label
+                        key={option.value}
+                        className={`flex items-center p-4 border-2 rounded-lg cursor-pointer transition-all ${
+                          formData.investment === option.value
+                            ? 'border-blue-900 bg-blue-50'
+                            : 'border-gray-300 hover:border-blue-900'
+                        }`}
+                      >
+                        <input
+                          type="radio"
+                          name="investment"
+                          value={option.value}
+                          checked={formData.investment === option.value}
+                          onChange={(e) => handleInputChange('investment', e.target.value)}
+                          className="w-5 h-5 text-blue-900"
+                        />
+                        <span className="ml-3 text-gray-900 font-medium">{option.label}</span>
+                      </label>
+                    ))}
+                  </div>
+                </div>
+
+                <div className="space-y-4 pb-8 border-b-2 border-gray-200">
+                  <h2 className="text-xl font-bold text-gray-900">
+                    ¿Qué sientes que más te está frenando hoy para crecer? *
+                  </h2>
+                  <textarea
+                    value={formData.challenge}
+                    onChange={(e) => handleInputChange('challenge', e.target.value)}
+                    placeholder="Escribe tu respuesta aquí..."
+                    rows="5"
+                    className="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-900 focus:border-blue-900 outline-none transition resize-none"
+                  />
+                </div>
+
+                <div className="space-y-4 pb-8">
+                  <p className="text-sm text-gray-700 leading-relaxed">
+                    Durante la sesión vamos a definir si tendría sentido trabajar 1 a 1 juntos y qué tipo de acompañamiento sería el más adecuado para ti. Sabemos que cada negocio está en una etapa distinta, por eso esta pregunta nos ayuda a ofrecerte opciones realistas según tu momento actual.
+                  </p>
+                  <p className="text-base font-semibold text-gray-900">
+                    ¿Cuál de las siguientes opciones describe mejor tu situación? *
+                  </p>
+                  <div className="space-y-3">
+                    {[
+                      { value: 'no-budget', label: 'En este momento no cuento con presupuesto para invertir en mi crecimiento' },
+                      { value: 'under1k', label: 'Actualmente dispongo de menos de $1.000 USD para avanzar con mi negocio' },
+                      { value: '2k-4k', label: 'Tengo entre $2.000 y $4.000 USD disponibles para seguir escalando' },
+                      { value: 'over4k', label: 'Puedo invertir más de $4.000 USD si el enfoque y los resultados esperados se alinean con mis objetivos' }
+                    ].map((option) => (
+                      <label
+                        key={option.value}
+                        className={`flex items-center p-4 border-2 rounded-lg cursor-pointer transition-all ${
+                          formData.budget === option.value
+                            ? 'border-blue-900 bg-blue-50'
+                            : 'border-gray-300 hover:border-blue-900'
+                        }`}
+                      >
+                        <input
+                          type="radio"
+                          name="budget"
+                          value={option.value}
+                          checked={formData.budget === option.value}
+                          onChange={(e) => handleInputChange('budget', e.target.value)}
+                          className="w-5 h-5 text-blue-900"
+                        />
+                        <span className="ml-3 text-gray-900 font-medium text-sm">{option.label}</span>
+                      </label>
+                    ))}
+                  </div>
+                </div>
+
+                <div className="pt-6 flex justify-center">
+                  <button
+                    onClick={handleSubmit}
+                    disabled={!isFormValid()}
+                    className={`px-12 py-3 rounded-full font-bold text-base flex items-center justify-center gap-2 transition-all ${
+                      isFormValid()
+                        ? 'bg-blue-900 text-white hover:bg-blue-800 shadow-lg hover:scale-105'
+                        : 'bg-gray-800 text-white shadow-md'
+                    }`}
+                  >
+                    Siguiente 🚀
+                    <ArrowRight className="w-5 h-5" />
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <style>{`
+            @keyframes fadeIn {
+              from {
+                opacity: 0;
+                transform: translateY(20px);
+              }
+              to {
+                opacity: 1;
+                transform: translateY(0);
+              }
+            }
+            .animate-fadeIn {
+              animation: fadeIn 0.5s ease-out;
+            }
+          `}</style>
+        </div>
+      );
+    }
+    
+    const root = ReactDOM.createRoot(document.getElementById('root'));
+    root.render(<LeadQualificationForm />);
+  </script>
+</body>
+</html>
