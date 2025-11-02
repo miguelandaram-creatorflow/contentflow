@@ -3,8 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
- <title>Content Flow / Form</title>
-
+  <title>Content Flow / Form</title>
 
   <!-- Estilos -->
   <script src="https://cdn.tailwindcss.com"></script>
@@ -55,6 +54,7 @@
         budget: ''
       });
       const [result, setResult] = React.useState(null);
+      const [isSubmitting, setIsSubmitting] = React.useState(false);
 
       const handleInputChange = (field, value) => {
         setFormData(prev => ({ ...prev, [field]: value }));
@@ -98,24 +98,82 @@
             buttonText: 'Agendar llamada de 15 min',
             redirect: 'https://calendly.com/miguelandaram/sesion-personalizada-contentflow'
           };
-     } else {
-  return {
-    category: 'not-qualified',
-    duration: 15,
-    title: '¡Perfecto! Estás a punto de reservar tu llamada de 15 minutos.',
-    message: 'Haz clic en el botón de abajo para elegir el horario que más te convenga.',
-    icon: 'warning',
-    buttonText: 'Agendar llamada de 15 min',
-    redirect: 'https://calendly.com/miguelangelorcial/sesion-personalizada-contentflow'
-  };
-}
-
+        } else {
+          return {
+            category: 'not-qualified',
+            duration: 15,
+            title: '¡Perfecto! Estás a punto de reservar tu llamada de 15 minutos.',
+            message: 'Haz clic en el botón de abajo para elegir el horario que más te convenga.',
+            icon: 'warning',
+            buttonText: 'Agendar llamada de 15 min',
+            redirect: 'https://calendly.com/miguelangelorcial/sesion-personalizada-contentflow'
+          };
+        }
       };
 
-      const handleSubmit = () => {
-        const qualification = calculateQualification();
-        setResult(qualification);
-        window.scrollTo({ top: 0, behavior: 'smooth' });
+      const handleSubmit = async () => {
+        setIsSubmitting(true);
+        
+        try {
+          // Calcular la calificación
+          const qualification = calculateQualification();
+          
+          // Preparar los datos para enviar a Make
+          const dataToSend = {
+            nombre: formData.firstName,
+            apellido: formData.lastName,
+            telefono: formData.phone,
+            email: formData.email,
+            instagram: formData.instagram,
+            ocupacion: formData.occupation,
+            estadoNegocio: formData.businessStatus,
+            inversionPrevia: formData.investment,
+            desafio: formData.challenge,
+            presupuesto: formData.budget,
+            calificacion: qualification.category,
+            duracionLlamada: qualification.duration,
+            score: calculateScore()
+          };
+
+          // Enviar a Make
+          const response = await fetch('https://hook.us2.make.com/f9nbxbtjma3rgcdqlxnq44fut5prrzoq', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(dataToSend)
+          });
+
+          if (response.ok) {
+            // Mostrar resultado
+            setResult(qualification);
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+          } else {
+            alert('Hubo un error al enviar el formulario. Por favor intenta de nuevo.');
+          }
+        } catch (error) {
+          console.error('Error:', error);
+          alert('Error de conexión. Por favor verifica tu internet e intenta de nuevo.');
+        } finally {
+          setIsSubmitting(false);
+        }
+      };
+
+      const calculateScore = () => {
+        let score = 0;
+        if (formData.businessStatus === 'constant') score += 3;
+        else if (formData.businessStatus === 'unstable') score += 2;
+        else score += 1;
+        
+        if (formData.investment === 'premium') score += 3;
+        else if (formData.investment === 'courses') score += 2;
+        else score += 1;
+        
+        if (formData.budget === 'over4k' || formData.budget === '2k-4k') score += 3;
+        else if (formData.budget === 'under1k') score += 2;
+        else score += 1;
+        
+        return score;
       };
 
       const isFormValid = () => {
@@ -363,14 +421,14 @@
                 <div className="pt-6 flex justify-center">
                   <button
                     onClick={handleSubmit}
-                    disabled={!isFormValid()}
+                    disabled={!isFormValid() || isSubmitting}
                     className={`px-12 py-3 rounded-full font-bold text-base flex items-center justify-center gap-2 transition-all ${
-                      isFormValid()
+                      isFormValid() && !isSubmitting
                         ? 'bg-blue-900 text-white hover:bg-blue-800 shadow-lg hover:scale-105'
                         : 'bg-gray-300 text-white cursor-not-allowed'
                     }`}
                   >
-                    Siguiente 🚀
+                    {isSubmitting ? 'Enviando...' : 'Siguiente 🚀'}
                     <ArrowRight className="w-5 h-5" />
                   </button>
                 </div>
