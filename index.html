@@ -64,23 +64,23 @@
         let score = 0;
 
         // negocio
-        if (formData.businessStatus === 'constant') score += 3;
-        else if (formData.businessStatus === 'unstable') score += 2;
+        if (formData.businessStatus === 'Ventas constantes') score += 3;
+        else if (formData.businessStatus === 'Ventas inestables') score += 2;
         else score += 1;
 
         // inversión previa
-        if (formData.investment === 'premium') score += 3;
-        else if (formData.investment === 'courses') score += 2;
+        if (formData.investment === 'Programas premium') score += 3;
+        else if (formData.investment === 'Cursos/Servicios sueltos') score += 2;
         else score += 1;
 
         // presupuesto
-        if (formData.budget === 'over4k' || formData.budget === '2k-4k') score += 3;
-        else if (formData.budget === 'under1k') score += 2;
+        if (formData.budget === 'Más de $4.000' || formData.budget === '$2.000 - $4.000') score += 3;
+        else if (formData.budget === 'Menos de $1.000') score += 2;
         else score += 1;
 
         if (score >= 8) {
           return {
-            category: 'qualified',
+            category: 'Calificado',
             duration: 45,
             title: '¡Genial! Estás a punto de reservar tu llamada de 45 minutos.',
             message: 'Selecciona el horario que mejor se ajuste a tu agenda.',
@@ -90,7 +90,7 @@
           };
         } else if (score >= 5) {
           return {
-            category: 'partial',
+            category: 'Calificado parcial',
             duration: 15,
             title: '¡Perfecto! Estás a punto de reservar tu llamada de 15 minutos.',
             message: 'Haz clic en el botón de abajo para elegir el horario que más te convenga.',
@@ -100,7 +100,7 @@
           };
         } else {
           return {
-            category: 'not-qualified',
+            category: 'No calificado',
             duration: 15,
             title: '¡Perfecto! Estás a punto de reservar tu llamada de 15 minutos.',
             message: 'Haz clic en el botón de abajo para elegir el horario que más te convenga.',
@@ -161,16 +161,16 @@
 
       const calculateScore = () => {
         let score = 0;
-        if (formData.businessStatus === 'constant') score += 3;
-        else if (formData.businessStatus === 'unstable') score += 2;
+        if (formData.businessStatus === 'Ventas constantes') score += 3;
+        else if (formData.businessStatus === 'Ventas inestables') score += 2;
         else score += 1;
         
-        if (formData.investment === 'premium') score += 3;
-        else if (formData.investment === 'courses') score += 2;
+        if (formData.investment === 'Programas premium') score += 3;
+        else if (formData.investment === 'Cursos/Servicios sueltos') score += 2;
         else score += 1;
         
-        if (formData.budget === 'over4k' || formData.budget === '2k-4k') score += 3;
-        else if (formData.budget === 'under1k') score += 2;
+        if (formData.budget === 'Más de $4.000' || formData.budget === '$2.000 - $4.000') score += 3;
+        else if (formData.budget === 'Menos de $1.000') score += 2;
         else score += 1;
         
         return score;
@@ -294,9 +294,9 @@
                   <h2 className="text-xl font-bold text-gray-900">¿A qué te dedicas actualmente? *</h2>
                   <div className="space-y-3">
                     {[
-                      { value: 'coach', label: 'Soy Coach, Mentor o Consultor' },
-                      { value: 'professional', label: 'Soy Profesional Independiente' },
-                      { value: 'business', label: 'Soy dueño de un Negocio digital' }
+                      { value: 'Coach/Mentor/Consultor', label: 'Soy Coach, Mentor o Consultor' },
+                      { value: 'Profesional Independiente', label: 'Soy Profesional Independiente' },
+                      { value: 'Dueño Negocio Digital', label: 'Soy dueño de un Negocio digital' }
                     ].map((option) => (
                       <label
                         key={option.value}
@@ -322,10 +322,10 @@
                   <h2 className="text-xl font-bold text-gray-900">¿Actualmente tienes un negocio digital activo? *</h2>
                   <div className="space-y-3">
                     {[
-                      { value: 'constant', label: 'Sí, vendo servicios o programas de forma constante' },
-                      { value: 'unstable', label: 'Sí, pero mis ventas son inestables' },
-                      { value: 'launching', label: 'Estoy recién lanzando mi marca' },
-                      { value: 'not-yet', label: 'Aún no vendo, pero quiero comenzar' }
+                      { value: 'Ventas constantes', label: 'Sí, vendo servicios o programas de forma constante' },
+                      { value: 'Ventas inestables', label: 'Sí, pero mis ventas son inestables' },
+                      { value: 'Recién lanzando', label: 'Estoy recién lanzando mi marca' },
+                      { value: 'Aún no vendo', label: 'Aún no vendo, pero quiero comenzar' }
                     ].map((option) => (
                       <label
                         key={option.value}
@@ -351,9 +351,9 @@
                   <h2 className="text-xl font-bold text-gray-900">¿Has invertido antes en programas o mentorías para escalar tu negocio? *</h2>
                   <div className="space-y-3">
                     {[
-                      { value: 'premium', label: 'Sí, en programas o mentorías premium (acompañamiento 1 a 1)' },
-                      { value: 'courses', label: 'Sí, en cursos o servicios sueltos (edición, ads, setter, etc.)' },
-                      { value: 'never', label: 'No, nunca he invertido' }
+                      { value: 'Programas premium', label: 'Sí, en programas o mentorías premium (acompañamiento 1 a 1)' },
+                      { value: 'Cursos/Servicios sueltos', label: 'Sí, en cursos o servicios sueltos (edición, ads, setter, etc.)' },
+                      { value: 'Nunca invertido', label: 'No, nunca he invertido' }
                     ].map((option) => (
                       <label
                         key={option.value}
@@ -393,10 +393,10 @@
                   <p className="text-base font-semibold text-gray-900">¿Cuál de las siguientes opciones describe mejor tu situación? *</p>
                   <div className="space-y-3">
                     {[
-                      { value: 'no-budget', label: 'En este momento no cuento con presupuesto para invertir en mi crecimiento' },
-                      { value: 'under1k', label: 'Actualmente dispongo de menos de $1.000 USD para avanzar con mi negocio' },
-                      { value: '2k-4k', label: 'Tengo entre $2.000 y $4.000 USD disponibles para seguir escalando' },
-                      { value: 'over4k', label: 'Puedo invertir más de $4.000 USD si el enfoque y los resultados esperados se alinean con mis objetivos' }
+                      { value: 'Sin presupuesto', label: 'En este momento no cuento con presupuesto para invertir en mi crecimiento' },
+                      { value: 'Menos de $1.000', label: 'Actualmente dispongo de menos de $1.000 USD para avanzar con mi negocio' },
+                      { value: '$2.000 - $4.000', label: 'Tengo entre $2.000 y $4.000 USD disponibles para seguir escalando' },
+                      { value: 'Más de $4.000', label: 'Puedo invertir más de $4.000 USD si el enfoque y los resultados esperados se alinean con mis objetivos' }
                     ].map((option) => (
                       <label
                         key={option.value}
