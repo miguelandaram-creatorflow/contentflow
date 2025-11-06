@@ -120,8 +120,6 @@
           const dataToSend = {
             nombre: formData.firstName,
             apellido: formData.lastName,
-            telefono: formData.phone,
-            email: formData.email,
             instagram: formData.instagram,
             ocupacion: formData.occupation,
             estadoNegocio: formData.businessStatus,
@@ -178,8 +176,6 @@
         return (
           formData.firstName &&
           formData.lastName &&
-          formData.phone &&
-          formData.email &&
           formData.instagram &&
           formData.occupation &&
           formData.businessStatus &&
@@ -208,8 +204,6 @@
               {result.redirect ? (
                 <a
                   href={result.redirect}
-                  target="_blank"
-                  rel="noopener noreferrer"
                   className="inline-flex items-center gap-2 bg-blue-900 text-white px-8 py-4 rounded-full font-semibold text-lg hover:bg-blue-800 transition-all hover:scale-105 shadow-lg"
                 >
                   {result.buttonText}
@@ -254,26 +248,6 @@
                         className="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-900 focus:border-blue-900 outline-none transition"
                       />
                     </div>
-                  </div>
-
-                  <div>
-                    <label className="block text-sm font-semibold text-gray-700 mb-2">Teléfono *</label>
-                    <input
-                      type="tel"
-                      value={formData.phone}
-                      onChange={(e) => handleInputChange('phone', e.target.value)}
-                      className="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-900 focus:border-blue-900 outline-none transition"
-                    />
-                  </div>
-
-                  <div>
-                    <label className="block text-sm font-semibold text-gray-700 mb-2">Correo electrónico *</label>
-                    <input
-                      type="email"
-                      value={formData.email}
-                      onChange={(e) => handleInputChange('email', e.target.value)}
-                      className="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-900 focus:border-blue-900 outline-none transition"
-                    />
                   </div>
 
                   <div>
@@ -374,7 +348,7 @@
                 </div>
 
                 <div className="space-y-4 pb-8 border-b-2 border-gray-200">
-                  <h2 className="text-xl font-bold text-gray-900">¿Qué sientes que más te está frenando hoy para crecer? *</h2>
+                  <h2 className="text-xl font-bold text-gray-900">¿Qué crees que te está frenando más en este momento para crecer? *</h2>
                   <textarea
                     value={formData.challenge}
                     onChange={(e) => handleInputChange('challenge', e.target.value)}
